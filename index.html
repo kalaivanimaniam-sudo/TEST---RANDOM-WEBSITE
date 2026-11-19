@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MSIA Member Dashboard</title>
+<style>
+  :root {
+    --bg: #f6f5f2;
+    --card: #ffffff;
+    --ink: #2b2f36;
+    --muted: #6b7280;
+    --line: #e5e3dd;
+    --accent: #1f4e5f;
+    --accent-soft: #e8eff1;
+    --gold: #b08d3e;
+    --gold-soft: #f6efe1;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
+    color: var(--ink);
+    line-height: 1.55;
+    padding-bottom: 48px;
+    background-color: var(--bg);
+    /* Layered background: soft top fade, silicon wafer watermark, circuit motif */
+    background-image:
+      radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 55%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cdefs%3E%3Cpattern id='d' width='27' height='27' patternUnits='userSpaceOnUse'%3E%3Crect x='0.5' y='0.5' width='26' height='26' fill='%23dbe6ea' stroke='%23a9bec7' stroke-width='1'/%3E%3C/pattern%3E%3CradialGradient id='hl' cx='40%25' cy='35%25' r='70%25'%3E%3Cstop offset='0%25' stop-color='%23ffffff' stop-opacity='0.5'/%3E%3Cstop offset='100%25' stop-color='%23ffffff' stop-opacity='0'/%3E%3C/radialGradient%3E%3CclipPath id='w'%3E%3Ccircle cx='200' cy='200' r='188'/%3E%3C/clipPath%3E%3C/defs%3E%3Cg opacity='0.5'%3E%3Cg clip-path='url(%23w)'%3E%3Crect width='400' height='400' fill='url(%23d)'/%3E%3Ccircle cx='200' cy='200' r='188' fill='url(%23hl)'/%3E%3C/g%3E%3Ccircle cx='200' cy='200' r='188' fill='none' stroke='%238fa9b4' stroke-width='3'/%3E%3Crect x='184' y='381' width='32' height='8' rx='2' fill='%238fa9b4'/%3E%3C/g%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cg fill='none' stroke='%23c4d2d7' stroke-width='1.3'%3E%3Cpath d='M30 30h70v40h60v30'/%3E%3Cpath d='M230 50h-60v50h-40v50'/%3E%3Cpath d='M60 230v-60h80v-40'/%3E%3Cpath d='M210 260v-50h-50'/%3E%3Cpath d='M130 260v-30h70'/%3E%3Cpath d='M0 140h50v60'/%3E%3Cpath d='M260 170h-40v40'/%3E%3C/g%3E%3Cg fill='%23aebfc6'%3E%3Ccircle cx='30' cy='30' r='3.2'/%3E%3Ccircle cx='160' cy='100' r='3.2'/%3E%3Ccircle cx='130' cy='130' r='3.2'/%3E%3Ccircle cx='60' cy='230' r='3.2'/%3E%3Ccircle cx='160' cy='170' r='3.2'/%3E%3Ccircle cx='50' cy='200' r='3.2'/%3E%3Ccircle cx='220' cy='210' r='3.2'/%3E%3Ccircle cx='230' cy='50' r='3.2'/%3E%3C/g%3E%3Cg fill='none' stroke='%23d4dee2' stroke-width='1'%3E%3Crect x='105' y='15' width='34' height='34' rx='4'/%3E%3Crect x='175' y='205' width='28' height='28' rx='4'/%3E%3C/g%3E%3C/svg%3E");
+    background-repeat: no-repeat, no-repeat, repeat;
+    background-position: center, center, top left;
+    background-size: auto, min(92vw, 820px) auto, 260px 260px;
+    background-attachment: fixed, fixed, fixed;
+  }
+
+  /* Wafer fabrication illustration in the hero banner */
+  .hero { position: relative; overflow: hidden; }
+  .hero .wafer-art {
+    position: absolute; right: -30px; top: 50%; transform: translateY(-50%);
+    width: 150px; height: 150px; opacity: 0.9; pointer-events: none;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+
+  header {
+    background: var(--card);
+    border-bottom: 1px solid var(--line);
+    padding: 26px 0 20px;
+    margin-bottom: 26px;
+    opacity: 1;
+  }
+  header .brand { display: flex; align-items: center; gap: 14px; }
+  header .logo {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: var(--accent); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 15px; letter-spacing: 0.5px;
+  }
+  header h1 { font-size: 22px; font-weight: 650; }
+  header .sub { color: var(--muted); font-size: 13.5px; margin-top: 2px; }
+  header .meta { margin-left: auto; text-align: right; color: var(--muted); font-size: 12.5px; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 26px; }
+  .chip {
+    border: 1px solid var(--line); background: var(--card);
+    color: var(--muted); font-size: 13px; padding: 6px 14px;
+    border-radius: 999px; cursor: pointer; transition: all .15s ease;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .search-row { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
+  .search-row .search-box {
+    flex: 1; max-width: 420px; position: relative;
+  }
+  .search-row input {
+    width: 100%; border: 1px solid var(--line); background: var(--card);
+    border-radius: 999px; padding: 9px 16px 9px 38px;
+    font-size: 13.5px; outline: none; font-family: inherit; color: var(--ink);
+  }
+  .search-row input:focus { border-color: var(--accent); }
+  .search-row .search-icon {
+    position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    font-size: 14px; color: var(--muted); pointer-events: none;
+  }
+  .search-row .search-clear {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    display: none; border: none; background: #eef1f4; color: var(--muted);
+    width: 20px; height: 20px; border-radius: 50%; cursor: pointer;
+    font-size: 11px; line-height: 1;
+  }
+  .search-row .search-clear.show { display: block; }
+  .search-row .search-meta { font-size: 12.5px; color: var(--muted); }
+
+  .hero {
+    background: linear-gradient(135deg, var(--accent) 0%, #2d6b7e 100%);
+    color: #fff; border-radius: 14px; padding: 22px 26px; margin-bottom: 30px;
+    display: flex; gap: 16px; align-items: flex-start;
+  }
+  .hero .badge {
+    background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35);
+    font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 999px; white-space: nowrap; margin-top: 3px;
+  }
+  .hero h2 { font-size: 18px; font-weight: 650; }
+  .hero p { font-size: 13.5px; opacity: .92; margin-top: 4px; }
+  .hero .date { font-size: 12px; opacity: .75; margin-top: 8px; }
+
+  section { margin-bottom: 34px; }
+  .section-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+  .section-head h3 { font-size: 17px; font-weight: 650; }
+  .section-head .hint { color: var(--muted); font-size: 12.5px; }
+  .section-head .count {
+    margin-left: auto; font-size: 12px; color: var(--accent);
+    background: var(--accent-soft); border-radius: 999px; padding: 3px 10px;
+  }
+
+  .grid { display: grid; gap: 14px; }
+  .grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid.cols-5 { grid-template-columns: repeat(5, 1fr); }
+  @media (max-width: 900px) {
+    .grid.cols-3, .grid.cols-5 { grid-template-columns: 1fr; }
+    header .meta { display: none; }
+  }
+
+  .card {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px 18px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .card .tag {
+    align-self: flex-start; font-size: 10.5px; letter-spacing: 0.8px;
+    text-transform: uppercase; padding: 3px 9px; border-radius: 999px;
+  }
+  .tag.policy { background: #fdeceb; color: #9b3b34; }
+  .tag.membership { background: var(--gold-soft); color: var(--gold); }
+  .tag.events { background: var(--accent-soft); color: var(--accent); }
+  .tag.news { background: #edf3ea; color: #4a7040; }
+  .tag.engagement { background: #f0ecf6; color: #5d4a8a; }
+  .tag.announcements { background: #eef1f4; color: #46586b; }
+  .card h4 { font-size: 14.5px; font-weight: 650; line-height: 1.35; }
+  .card .date { font-size: 12px; color: var(--muted); }
+  .card .source { font-size: 11.5px; color: #8a8f98; font-style: italic; }
+  .card p { font-size: 13px; color: var(--muted); }
+  .card.latest { border-color: var(--accent); box-shadow: 0 2px 10px rgba(31,78,95,0.10); }
+  .card .latest-flag {
+    font-size: 10.5px; color: var(--accent); font-weight: 700;
+    letter-spacing: 0.8px; text-transform: uppercase;
+  }
+  .empty {
+    grid-column: 1 / -1; text-align: center; color: var(--muted);
+    font-size: 13.5px; padding: 26px; background: var(--card);
+    border: 1px dashed var(--line); border-radius: 12px;
+  }
+
+  .reg-btn {
+    margin-top: auto; align-self: flex-start;
+    background: var(--accent); color: #fff; border: none;
+    font-size: 12.5px; font-weight: 600; padding: 7px 16px;
+    border-radius: 8px; cursor: pointer; transition: background .15s ease;
+  }
+  .reg-btn:hover { background: #173d4b; }
+  .reg-btn.registered { background: var(--gold-soft); color: var(--gold); border: 1px solid var(--gold); }
+  .reg-note {
+    margin-top: 6px; font-size: 11px; color: #9aa0a8; display: none;
+  }
+  .reg-btn.registered + .reg-note { display: block; }
+
+  .count-badge {
+    align-self: flex-start; font-size: 11px; font-weight: 700;
+    background: var(--accent-soft); color: var(--accent);
+    padding: 3px 9px; border-radius: 999px; margin-top: 4px;
+  }
+  .count-badge.today { background: var(--gold-soft); color: var(--gold); }
+  .count-badge.past { background: #f0f0ee; color: #9aa0a8; font-weight: 600; }
+  .card.past-event { opacity: 0.62; }
+  .card.past-event h4 { text-decoration: none; }
+
+  /* ---------- Poll widget ---------- */
+  .poll-card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 20px 24px; margin-top: 14px;
+  }
+  .poll-card h4 { font-size: 15px; margin-bottom: 4px; }
+  .poll-card .poll-sub { font-size: 12.5px; color: var(--muted); margin-bottom: 14px; }
+  .poll-option {
+    display: block; width: 100%; text-align: left; margin-bottom: 9px;
+    background: #f4f6f7; border: 1px solid var(--line); border-radius: 9px;
+    padding: 9px 13px; font-size: 13px; cursor: pointer; position: relative;
+    font-family: inherit; color: var(--ink); transition: border-color .15s ease;
+    overflow: hidden;
+  }
+  .poll-option:hover { border-color: var(--accent); }
+  .poll-option .fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    background: var(--accent-soft); width: 0; transition: width .4s ease;
+  }
+  .poll-option .label { position: relative; display: flex; justify-content: space-between; gap: 10px; }
+  .poll-option .pct { color: var(--muted); font-size: 12px; }
+  .poll-option.voted { border-color: var(--accent); }
+  .poll-option.voted .pct { color: var(--accent); font-weight: 700; }
+  .poll-note { font-size: 11.5px; color: #9aa0a8; margin-top: 6px; }
+
+  .cat-card { cursor: pointer; transition: all .15s ease; }
+  .cat-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .cat-card.selected { border-color: var(--accent); background: var(--accent-soft); }
+  .cat-card .cat-name { font-size: 15px; font-weight: 650; }
+  .cat-card .cat-fee { font-size: 17px; font-weight: 700; color: var(--accent); }
+  .cat-card .cat-fee small { font-size: 11.5px; color: var(--muted); font-weight: 500; }
+
+  .cat-detail {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 20px 24px; margin-top: 14px;
+  }
+  .cat-detail h4 { font-size: 16px; margin-bottom: 4px; }
+  .cat-detail .fee-line { font-size: 14px; color: var(--accent); font-weight: 650; margin-bottom: 10px; }
+  .cat-detail ul { margin: 8px 0 0 18px; color: var(--muted); font-size: 13.5px; }
+  .cat-detail li { margin-bottom: 5px; }
+
+  .board-list {
+    margin-top: 14px; background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px 22px; columns: 2; column-gap: 32px;
+  }
+  .board-list .member {
+    break-inside: avoid; padding: 7px 0; border-bottom: 1px dashed var(--line);
+    font-size: 13px; color: var(--muted);
+  }
+  .board-list .member:last-child { border-bottom: none; }
+  .board-list .member strong { display: block; color: var(--ink); font-size: 13.5px; }
+  @media (max-width: 700px) { .board-list { columns: 1; } }
+
+  /* ---------- Chatbot widget ---------- */
+  .chat-fab {
+    position: fixed; right: 22px; bottom: 22px; z-index: 60;
+    width: 54px; height: 54px; border-radius: 50%; border: none;
+    background: var(--accent); color: #fff; font-size: 22px;
+    cursor: pointer; box-shadow: 0 4px 14px rgba(31,78,95,0.35);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .15s ease, background .15s ease;
+  }
+  .chat-fab:hover { transform: scale(1.07); background: #173d4b; }
+  .chat-panel {
+    position: fixed; right: 22px; bottom: 88px; z-index: 61;
+    width: 340px; max-width: calc(100vw - 44px); height: 440px;
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.14);
+    display: none; flex-direction: column; overflow: hidden;
+  }
+  .chat-panel.open { display: flex; }
+  .chat-head {
+    background: var(--accent); color: #fff; padding: 13px 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .chat-head .avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+  }
+  .chat-head .t { flex: 1; }
+  .chat-head .t strong { display: block; font-size: 13.5px; }
+  .chat-head .t span { font-size: 11px; opacity: .85; }
+  .chat-head .close {
+    background: none; border: none; color: #fff; font-size: 17px;
+    cursor: pointer; opacity: .8; padding: 2px 6px;
+  }
+  .chat-head .close:hover { opacity: 1; }
+  .chat-log {
+    flex: 1; overflow-y: auto; padding: 14px;
+    display: flex; flex-direction: column; gap: 10px;
+    background: #faf9f7;
+  }
+  .msg { max-width: 82%; padding: 9px 12px; border-radius: 12px; font-size: 13px; line-height: 1.45; }
+  .msg.bot { align-self: flex-start; background: #eef2f4; color: var(--ink); border-bottom-left-radius: 4px; }
+  .msg.user { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+  .msg.typing { color: var(--muted); font-style: italic; }
+  .chat-quick { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 12px 4px; background: #faf9f7; }
+  .chat-quick button {
+    border: 1px solid var(--line); background: #fff; color: var(--accent);
+    font-size: 11.5px; padding: 4px 10px; border-radius: 999px; cursor: pointer;
+  }
+  .chat-quick button:hover { border-color: var(--accent); }
+  .chat-input {
+    display: flex; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--line); background: #fff;
+  }
+  .chat-input input {
+    flex: 1; border: 1px solid var(--line); border-radius: 8px;
+    padding: 8px 10px; font-size: 13px; outline: none; font-family: inherit;
+  }
+  .chat-input input:focus { border-color: var(--accent); }
+  .chat-input button {
+    background: var(--accent); color: #fff; border: none; border-radius: 8px;
+    padding: 8px 14px; font-size: 13px; cursor: pointer;
+  }
+  .chat-input button:hover { background: #173d4b; }
+
+  .sea-map-wrap {
+    margin-top: 14px; background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 20px 24px; display: flex; gap: 26px;
+    align-items: center; flex-wrap: wrap;
+  }
+  .sea-map-wrap svg { flex: 0 0 auto; display: block; }
+  .sea-map-note { flex: 1 1 260px; min-width: 240px; }
+  .sea-map-note h4 { font-size: 15px; margin-bottom: 6px; }
+  .sea-map-note p { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+  .sea-map-note .map-legend { display: flex; gap: 16px; font-size: 12px; color: var(--muted); margin-top: 10px; }
+  .sea-map-note .map-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .sea-map-note .dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+
+  footer {
+    text-align: center; color: var(--muted); font-size: 12px;
+    margin-top: 40px; border-top: 1px solid var(--line); padding-top: 18px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap brand-row">
+    <div class="brand">
+      <div class="logo">MSIA</div>
+      <div>
+        <h1>MSIA Member Dashboard</h1>
+        <div class="sub">Malaysia Semiconductor Industry Association &mdash; member updates at a glance</div>
+      </div>
+      <div class="meta">
+        <div>Sample dashboard &middot; demo data only</div>
+        <div id="today"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <div class="wrap">
+
+  <div class="search-row">
+    <div class="search-box">
+      <span class="search-icon">🔎</span>
+      <input type="text" id="searchInput" placeholder="Search announcements, activities, news…" aria-label="Search the dashboard" />
+      <button class="search-clear" id="searchClear" aria-label="Clear search">✕</button>
+    </div>
+    <span class="search-meta" id="searchMeta"></span>
+  </div>
+
+  <div class="chips" id="filterChips">
+    <button class="chip active" data-filter="all">All</button>
+    <button class="chip" data-filter="events">Events</button>
+    <button class="chip" data-filter="news">News</button>
+    <button class="chip" data-filter="membership">Membership</button>
+    <button class="chip" data-filter="policy">Policy</button>
+    <button class="chip" data-filter="engagement">Engagement</button>
+    <button class="chip" data-filter="announcements">Announcements</button>
+  </div>
+
+  <div class="hero" id="hero"></div>
+
+  <section>
+    <div class="section-head">
+      <h3>Announcements</h3>
+      <span class="hint">Important MSIA updates members should not miss</span>
+      <span class="count" id="annCount"></span>
+    </div>
+    <div class="grid cols-3" id="annGrid"></div>
+  </section>
+
+  <section id="policyWatchSection" style="display:none;">
+    <div class="section-head">
+      <h3>Policy Watch — US Regulation on Advanced Chips</h3>
+      <span class="hint">Recent published news on the IFR</span>
+      <span class="count" id="pnCount"></span>
+    </div>
+    <div class="grid cols-3" id="pnGrid"></div>
+  </section>
+
+  <section id="newsWatchSection" style="display:none;">
+    <div class="section-head">
+      <h3>In the News — Dato' Seri Wong Siew Hai &amp; MSIA</h3>
+      <span class="hint">Recent coverage on the semiconductor industry</span>
+      <span class="count" id="nwCount"></span>
+    </div>
+    <div class="grid cols-5" id="nwGrid"></div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h3>Upcoming Activities</h3>
+      <span class="hint">Events and programs coming soon</span>
+      <span class="count" id="actCount"></span>
+    </div>
+    <div class="grid cols-5" id="actGrid"></div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h3>Member Categories</h3>
+      <span class="hint">Click a category to view its details</span>
+    </div>
+    <div class="grid cols-3" id="catGrid"></div>
+    <div class="cat-detail" id="catDetail"></div>
+
+    <div class="poll-card" id="pollCard">
+      <h4>Member Poll 🗳️</h4>
+      <div class="poll-sub">Which upcoming activity are you most looking forward to?</div>
+      <div id="pollOptions"></div>
+      <div class="poll-note">Demo poll — one vote per visit, results shown instantly, nothing is saved.</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h3>MSIA Board Members</h3>
+      <span class="hint">2026 office bearers — from msia.org.my</span>
+      <span class="count">18 members</span>
+    </div>
+    <div class="board-list" id="boardList"></div>
+  </section>
+
+  <footer>
+    MSIA Member Dashboard &mdash; sample data for demonstration only. Figures shown are illustrative and subject to confirmation by MSIA.
+  </footer>
+</div>
+
+<!-- Chatbot widget -->
+<button class="chat-fab" id="chatFab" aria-label="Open MSIA assistant chat">💬</button>
+<div class="chat-panel" id="chatPanel" role="dialog" aria-label="MSIA assistant chat">
+  <div class="chat-head">
+    <div class="avatar">🤖</div>
+    <div class="t"><strong>MSIA Assistant</strong><span>Ask about events, fees, membership…</span></div>
+    <button class="close" id="chatClose" aria-label="Close chat">✕</button>
+  </div>
+  <div class="chat-log" id="chatLog"></div>
+  <div class="chat-quick" id="chatQuick"></div>
+  <div class="chat-input">
+    <input type="text" id="chatBox" placeholder="Type your question…" aria-label="Type your question" />
+    <button id="chatSend">Send</button>
+  </div>
+</div>
+
+<script>
+  // ---------- Sample data (all figures are illustrative demo data) ----------
+
+  // Google Form sign-up link for event registration.
+  const REGISTRATION_FORM_URL = "https://forms.gle/cyGWja1PcDxkDvpr9";
+
+  const announcements = [
+    {
+      title: "Membership Fees Update — Effective January 2027",
+      date: "2026-11-14",
+      topic: "membership",
+      summary: "Revised monthly subscription rates take effect from 1 January 2027; see the Member Categories section for each tier."
+    },
+    {
+      title: "US Regulatory Requirement — IFR on Advanced Chips",
+      date: "2026-11-10",
+      topic: "policy",
+      summary: "New US Interim Final Rule on advanced chips may affect export-linked members; compliance briefing notes circulated."
+    },
+    {
+      title: "Upcoming MSIA Board Retreat 2027",
+      date: "2026-11-05",
+      topic: "announcements",
+      summary: "Board Retreat planned for Q2 2027 in Penang to set the association's strategic direction for the year."
+    }
+  ];
+
+  const activities = [
+    {
+      title: "Dutch Precision Week 2026",
+      date: "2026-11-16",
+      topic: "events",
+      summary: "MSIA leads a Malaysian delegation to Dutch Precision Week, connecting local firms with Dutch high-tech manufacturing partners."
+    },
+    {
+      title: "Silicon Malaysia Conference 2026 & Yole Masterclass",
+      date: "2026-11-03",
+      topic: "events",
+      summary: "Two-day conference and Yole Group Masterclass Series in Penang, bringing together semiconductor industry leaders."
+    },
+    {
+      title: "2027 Budget & Tax Update Webinar",
+      date: "2026-10-23",
+      topic: "events",
+      summary: "Webinar on what Malaysia's Budget 2027 means for businesses and the semiconductor industry."
+    },
+    {
+      title: "SME MNC Connect & SME Financing Conference",
+      date: "2026-09-22",
+      topic: "engagement",
+      summary: "Penang conference linking local SMEs with MNCs, following the success of the inaugural SME MNC Connect Day in April 2026."
+    },
+    {
+      title: "SEMICON SEA 2027",
+      date: "2027-06-15",
+      topic: "events",
+      summary: "Regional semiconductor exhibition and forums at MITEC Kuala Lumpur; member booths open for booking."
+    }
+  ];
+
+  // Policy Watch — recent published news on the US advanced-chip regulation (IFR)
+  const policyNews = [
+    {
+      title: "BIS Issues Interim Final Rule on Remote Access to Advanced Semiconductors",
+      date: "2026-11-16",
+      topic: "policy",
+      source: "US Federal Register / BIS",
+      summary: "Rule closes the 'remote access' loophole: US persons and cloud providers need licences to support advanced-chip workloads in named countries; effective 19 Nov 2026."
+    },
+    {
+      title: "Malaysia Among Five Countries Facing New US Chip Licence Requirements",
+      date: "2026-11-17",
+      topic: "policy",
+      source: "Reuters / Malay Mail",
+      summary: "Malaysia, Thailand, Vietnam, Cambodia and Indonesia singled out in the new rule — licence required for advanced chips and cloud access from 19 Nov 2026."
+    },
+    {
+      title: "Malaysia Is 'Disappointed' Over New US Chip Curbs, Trade Minister Says",
+      date: "2026-11-17",
+      topic: "policy",
+      source: "Reuters / Malay Mail",
+      summary: "Malaysia flags potential disruption to its semiconductor supply chain and investment plans; MITI seeking clarification and engagement with US counterparts."
+    }
+  ];
+
+  // News Watch — recent published news featuring Dato' Seri Wong Siew Hai & MSIA
+  const presidentNews = [
+    {
+      title: "Penang SMEs Wary of Impact from Tighter US Chip Export Curbs",
+      date: "2026-11-19",
+      topic: "news",
+      source: "The Star",
+      summary: "Wong Siew Hai: mainstream operations (automotive, industrial, power chips and assembly-test) unaffected; but advanced AI infrastructure projects face stricter approvals and longer waits."
+    },
+    {
+      title: "MSIA and NCER Collaborate to Accelerate Semiconductor Ambitions",
+      date: "2026-06-10",
+      topic: "news",
+      source: "MSIA",
+      summary: "Partnership with the Northern Corridor Implementation Authority to strengthen the semiconductor ecosystem across the northern states."
+    },
+    {
+      title: "Malaysia's 2026 Semiconductor Export Can Hit $197B",
+      date: "2026-06-09",
+      topic: "news",
+      source: "Bloomberg",
+      summary: "Bloomberg report projects Malaysia's semiconductor exports could reach US$197 billion in 2026, on continued E&E export growth."
+    },
+    {
+      title: "MIDA Inks MoU with MSIA to Boost Malaysian Role in Global Value Chains",
+      date: "2026-05-07",
+      topic: "news",
+      source: "Malay Mail",
+      summary: "MoU and new initiatives to deepen local participation in the global semiconductor value chain, unveiled at SEMICON SEA 2026."
+    },
+    {
+      title: "'Connect Day' Helps Local SMEs Link Up with Global Players",
+      date: "2026-05-15",
+      topic: "news",
+      source: "The Star",
+      summary: "SME-MNC Connect Day praised for connecting Malaysian SMEs with multinational semiconductor players and opening new supply opportunities."
+    },
+    {
+      title: "Japan Indispensable to Supply Chain, Says MSIA",
+      date: "2026-04-01",
+      topic: "news",
+      source: "The Star",
+      summary: "Wong flags Japan-Malaysia opportunities in talent development and investment, while cautioning on helium supply risks and the stronger ringgit squeezing exporter margins."
+    }
+  ];
+
+  // Latest highlighted items (featured strip at the top — newest shown in the hero)
+  const highlights = [
+    {
+      title: "MSIA — Annual Members' Achievement Award",
+      date: "2026-11-18",
+      topic: "news",
+      summary: "Nominations are now open for the Annual Members' Achievement Award recognising excellence in the Malaysian semiconductor industry."
+    },
+    {
+      title: "MSIA — Media Response to US Regulation (IFR — Advanced Chips)",
+      date: "2026-11-12",
+      topic: "policy",
+      summary: "MSIA's official media statement on the US Interim Final Rule has been published; members may reference it in customer communications."
+    },
+    {
+      title: "MSIA — BFM Interview",
+      date: "2026-11-08",
+      topic: "news",
+      summary: "MSIA leadership discussed Malaysia's semiconductor outlook on BFM 89.9; replay link available in the member portal."
+    },
+    {
+      title: "MSIA — Yole MasterClass Session 2026",
+      date: "2026-10-28",
+      topic: "engagement",
+      summary: "Final Yole MasterClass of 2026 on advanced packaging trends; slides and recordings shared with all attendees."
+    }
+  ];
+
+  const categories = [
+    {
+      name: "Ordinary",
+      fee: "RM 7,000",
+      summary: "Full membership for companies operating in Malaysia's semiconductor and E&E industry.",
+      details: [
+        "Fees update: RM 7,000 monthly, effective 1 January 2027.",
+        "Open to incorporated companies with semiconductor operations in Malaysia.",
+        "Includes voting rights at the MSIA Annual General Meeting.",
+        "Full access to policy briefings, working groups and member events."
+      ]
+    },
+    {
+      name: "Charter",
+      fee: "RM 5,000",
+      summary: "Founding-member tier for early supporters of the association.",
+      details: [
+        "Fees update: RM 5,000 monthly, effective 1 January 2027.",
+        "Reserved for founding members who joined during MSIA's establishment year.",
+        "Retains voting rights and founding-member recognition at MSIA events.",
+        "Full access to policy briefings, working groups and member events."
+      ]
+    },
+    {
+      name: "Affiliate",
+      fee: "RM 4,000",
+      summary: "Entry tier for suppliers, service providers and ecosystem partners.",
+      details: [
+        "Fees update: RM 4,000 monthly, effective 1 January 2027.",
+        "For companies supporting the semiconductor ecosystem (logistics, equipment, services).",
+        "Non-voting membership with full access to events and programmes.",
+        "Eligible for SME–MNC Connect business-matching sessions."
+      ]
+    }
+  ];
+
+  // ---------- Helpers ----------
+
+  const topicLabels = {
+    events: "Events", news: "News", membership: "Membership",
+    policy: "Policy", engagement: "Engagement", announcements: "Announcements"
+  };
+
+  function fmtDate(iso) {
+    return new Date(iso + "T00:00:00").toLocaleDateString("en-MY", {
+      day: "numeric", month: "short", year: "numeric"
+    });
+  }
+
+  function byNewest(a, b) { return new Date(b.date) - new Date(a.date); }
+
+  function cardHTML(item, isLatest) {
+    return `
+      <div class="card ${isLatest ? "latest" : ""}">
+        ${isLatest ? '<span class="latest-flag">★ Latest</span>' : ""}
+        <span class="tag ${item.topic}">${topicLabels[item.topic]}</span>
+        <h4>${item.title}</h4>
+        <span class="date">${fmtDate(item.date)}${item.source ? ` &middot; <span class="source">${item.source}</span>` : ""}</span>
+        <p>${item.summary}</p>
+      </div>`;
+  }
+
+  // ---------- Feature 1 & 3: newest first + quick details ----------
+
+  const sortedAnn = [...announcements].sort(byNewest);
+  const sortedAct = [...activities].sort((a, b) => new Date(a.date) - new Date(b.date)); // upcoming: soonest next
+  const sortedHighlights = [...highlights].sort(byNewest);
+  const sortedPolicyNews = [...policyNews].sort(byNewest);
+  const sortedPresidentNews = [...presidentNews].sort(byNewest);
+
+  function renderNewsWatch(filter) {
+    const section = document.getElementById("newsWatchSection");
+    const show = (filter === "all" || filter === "news");
+    section.style.display = show ? "" : "none";
+    if (!show) return;
+    const list = sortedPresidentNews.filter(matchesSearch);
+    document.getElementById("nwGrid").innerHTML = list.length
+      ? list.map(i => cardHTML(i, false)).join("")
+      : `<div class="empty">No news match${searchTerm ? ` “${searchTerm}”` : ""}.</div>`;
+    document.getElementById("nwCount").textContent = `${list.length} item${list.length === 1 ? "" : "s"}`;
+  }
+
+  function renderPolicyNews(filter) {
+    const section = document.getElementById("policyWatchSection");
+    const show = (filter === "all" || filter === "policy");
+    section.style.display = show ? "" : "none";
+    if (!show) return;
+    const list = sortedPolicyNews.filter(matchesSearch);
+    document.getElementById("pnGrid").innerHTML = list.length
+      ? list.map(i => cardHTML(i, false)).join("")
+      : `<div class="empty">No policy news match${searchTerm ? ` “${searchTerm}”` : ""}.</div>`;
+    document.getElementById("pnCount").textContent = `${list.length} item${list.length === 1 ? "" : "s"}`;
+  }
+
+  function renderAnnouncements(filter) {
+    let list = filter === "all" ? sortedAnn : sortedAnn.filter(i => i.topic === filter);
+    list = list.filter(matchesSearch);
+    document.getElementById("annGrid").innerHTML = list.length
+      ? list.map(i => cardHTML(i, i === sortedAnn[0] && filter === "all" && !searchTerm)).join("")
+      : `<div class="empty">No announcements match${searchTerm ? ` “${searchTerm}”` : " this category"}.</div>`;
+    document.getElementById("annCount").textContent = `${list.length} item${list.length === 1 ? "" : "s"}`;
+  }
+
+  function activityCardHTML(item) {
+    const days = Math.ceil((new Date(item.date) - new Date("2026-11-19")) / 86400000);
+    const past = days < 0;
+    const badge = past
+      ? `<span class="count-badge past">held ${Math.abs(days)} day${Math.abs(days) === 1 ? "" : "s"} ago</span>`
+      : days === 0
+        ? `<span class="count-badge today">today</span>`
+        : `<span class="count-badge">in ${days} day${days === 1 ? "" : "s"}</span>`;
+    return `
+      <div class="card act-card ${past ? "past-event" : ""}">
+        <span class="tag ${item.topic}">${topicLabels[item.topic]}</span>
+        <h4>${item.title}</h4>
+        <span class="date">${fmtDate(item.date)}</span>
+        <p>${item.summary}</p>
+        ${badge}
+        <button class="reg-btn" data-title="${item.title}"
+          onclick="window.open('${REGISTRATION_FORM_URL}', '_blank', 'noopener')">Register</button>
+        <span class="reg-note">Opens the MSIA sign-up form in a new tab.</span>
+      </div>`;
+  }
+
+  function renderActivities(filter) {
+    let list = filter === "all" ? sortedAct : sortedAct.filter(i => i.topic === filter);
+    list = list.filter(matchesSearch);
+    document.getElementById("actGrid").innerHTML = list.length
+      ? list.map(i => activityCardHTML(i)).join("")
+      : `<div class="empty">No activities match${searchTerm ? ` “${searchTerm}”` : " this category"}.</div>`;
+    document.getElementById("actCount").textContent = `${list.length} item${list.length === 1 ? "" : "s"}`;
+
+    document.querySelectorAll("#actGrid .reg-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        // Visual feedback only — the Google Form opens via the onclick attribute.
+        if (!btn.classList.contains("registered")) {
+          btn.classList.add("registered");
+          btn.textContent = "Registered ✓";
+        } else {
+          btn.classList.remove("registered");
+          btn.textContent = "Register";
+        }
+      });
+    });
+  }
+
+  function renderHero(filter) {
+    const list = filter === "all" ? sortedHighlights : sortedHighlights.filter(i => i.topic === filter);
+    const hero = document.getElementById("hero");
+    const waferSVG = `
+      <svg class="wafer-art" viewBox="0 0 100 100" aria-hidden="true">
+        <defs>
+          <pattern id="wd" width="9" height="9" patternUnits="userSpaceOnUse">
+            <rect x="0.3" y="0.3" width="8.4" height="8.4" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="0.7"/>
+          </pattern>
+          <clipPath id="wc"><circle cx="50" cy="50" r="46"/></clipPath>
+        </defs>
+        <g clip-path="url(#wc)">
+          <circle cx="50" cy="50" r="46" fill="rgba(255,255,255,0.12)"/>
+          <rect x="0" y="0" width="100" height="100" fill="url(#wd)"/>
+        </g>
+        <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.6"/>
+        <rect x="45" y="95" width="10" height="3.5" rx="1" fill="rgba(255,255,255,0.55)"/>
+      </svg>`;
+    if (!list.length) {
+      hero.innerHTML = `<div class="badge">Highlight</div><div><h2>No highlights in this category</h2>
+        <p>Switch back to “All” to see the latest MSIA updates.</p></div>${waferSVG}`;
+      return;
+    }
+    const top = list[0];
+    hero.innerHTML = `
+      <span class="badge">Latest Highlight</span>
+      <div>
+        <h2>${top.title}</h2>
+        <p>${top.summary}</p>
+        <div class="date">${fmtDate(top.date)} &middot; ${topicLabels[top.topic]}</div>
+      </div>
+      ${waferSVG}`;
+  }
+
+  // ---------- Search ----------
+
+  let searchTerm = "";
+
+  function matchesSearch(item) {
+    if (!searchTerm) return true;
+    return (item.title + " " + item.summary + " " + (item.source || "") + " " + (topicLabels[item.topic] || ""))
+      .toLowerCase().includes(searchTerm);
+  }
+
+  function runSearch(term) {
+    searchTerm = term.trim().toLowerCase();
+    const clearBtn = document.getElementById("searchClear");
+    clearBtn.classList.toggle("show", !!searchTerm);
+    renderHero(activeFilter);
+    renderAnnouncements(activeFilter);
+    renderActivities(activeFilter);
+    renderPolicyNews(activeFilter);
+    renderNewsWatch(activeFilter);
+    const hits =
+      sortedAnn.filter(i => matchesSearch(i)).length +
+      sortedAct.filter(i => matchesSearch(i)).length +
+      sortedPolicyNews.filter(i => matchesSearch(i)).length +
+      sortedPresidentNews.filter(i => matchesSearch(i)).length;
+    document.getElementById("searchMeta").textContent = searchTerm
+      ? `${hits} match${hits === 1 ? "" : "es"} for “${searchTerm}”`
+      : "";
+  }
+
+  document.getElementById("searchInput").addEventListener("input", e => runSearch(e.target.value));
+  document.getElementById("searchClear").addEventListener("click", () => {
+    document.getElementById("searchInput").value = "";
+    runSearch("");
+  });
+
+  // ---------- Feature 2 (topic filter chips) ----------
+
+  let activeFilter = "all";
+
+  const chips = document.querySelectorAll(".chip");
+  chips.forEach(chip => {
+    chip.addEventListener("click", () => {
+      chips.forEach(c => c.classList.remove("active"));
+      chip.classList.add("active");
+      activeFilter = chip.dataset.filter;
+      renderHero(activeFilter);
+      renderAnnouncements(activeFilter);
+      renderActivities(activeFilter);
+      renderPolicyNews(activeFilter);
+      renderNewsWatch(activeFilter);
+    });
+  });
+
+  // ---------- Feature 2 (member category selection) ----------
+
+  let selectedCat = 0;
+
+  function renderCategories() {
+    document.getElementById("catGrid").innerHTML = categories.map((c, i) => `
+      <div class="card cat-card ${i === selectedCat ? "selected" : ""}" data-idx="${i}">
+        <span class="tag membership">${c.name}</span>
+        <div class="cat-name">${c.name} Member</div>
+        <div class="cat-fee">${c.fee} <small>/ month (from 2027)</small></div>
+        <p>${c.summary}</p>
+      </div>`).join("");
+
+    const c = categories[selectedCat];
+    document.getElementById("catDetail").innerHTML = `
+      <h4>${c.name} Member — Details</h4>
+      <div class="fee-line">Fees update: ${c.fee} monthly, effective 1 January 2027</div>
+      <ul>${c.details.map(d => `<li>${d}</li>`).join("")}</ul>`;
+
+    document.querySelectorAll(".cat-card").forEach(el => {
+      el.addEventListener("click", () => {
+        selectedCat = Number(el.dataset.idx);
+        renderCategories();
+      });
+    });
+  }
+
+  // Board members (from msia.org.my/about_board)
+  const board = [
+    { name: "Dato' Seri Wong Siew Hai", role: "President", org: "NationGate Holdings Berhad" },
+    { name: "Dato' Lim Yong Jin", role: "Vice President 1", org: "RGT Berhad" },
+    { name: "Mr Ng Kok Tiong", role: "Vice President 2", org: "Infineon Technologies (Kulim)" },
+    { name: "Dato' Solomon Lorthu", role: "Secretary", org: "Motorola Solutions Malaysia" },
+    { name: "Mr Bryan Leow Chun Meng", role: "Assistant Secretary", org: "AccoTEST Technology (M)" },
+    { name: "Ms Ng Lan Kheng", role: "Treasurer", org: "Deloitte Tax Services" },
+    { name: "Dato' KL Bock", role: "Board Member", org: "SanDisk Storage Malaysia" },
+    { name: "Mr Eng Seng Meng", role: "Board Member", org: "Infineon Technologies (Melaka)" },
+    { name: "Datin Anna Baweh", role: "Board Member", org: "Intel Microelectronics (Malaysia)" },
+    { name: "Mr Tan Siew Jin", role: "Board Member", org: "Jabil" },
+    { name: "Mr Victor Tan", role: "Board Member", org: "Plexus Manufacturing" },
+    { name: "Mr Vejay Kumar Narayanan", role: "Board Member", org: "Penguin Solutions (Smart Modular)" },
+    { name: "Mr Subbah Rao A/L Subramaniam", role: "Board Member", org: "Texas Instruments Malaysia" },
+    { name: "Mr Lee Boon Chun", role: "Board Member", org: "X-FAB Sarawak" },
+    { name: "Mr Azidi Che Azib", role: "Board Member", org: "Inari Amertron Berhad" },
+    { name: "Dato' Chu Jenn Weng", role: "Board Member", org: "ViTrox Technologies" },
+    { name: "Dato' Chong SK", role: "Board Member", org: "Swift Bridge Technologies (M)" },
+    { name: "Ms Catherine Lian", role: "Board Member", org: "IBM ASEAN" }
+  ];
+
+  // ---------- Poll widget (one vote per visit, in-memory only) ----------
+
+  const pollVotes = activities.map(() => 0);
+  let pollVoted = null;
+
+  function renderPoll() {
+    const wrap = document.getElementById("pollOptions");
+    const total = pollVotes.reduce((a, b) => a + b, 0);
+    wrap.innerHTML = activities.map((a, i) => {
+      const pct = total ? Math.round(pollVotes[i] / total * 100) : 0;
+      return `
+        <button class="poll-option ${pollVoted === i ? "voted" : ""}" data-idx="${i}" ${pollVoted !== null ? "disabled" : ""}>
+          <span class="fill" style="width:${pollVoted === null ? 0 : pct}%"></span>
+          <span class="label"><span>${a.title}</span>${pollVoted !== null ? `<span class="pct">${pct}%</span>` : ""}</span>
+        </button>`;
+    }).join("");
+
+    if (pollVoted === null) {
+      wrap.querySelectorAll(".poll-option").forEach(btn => {
+        btn.addEventListener("click", () => {
+          pollVoted = Number(btn.dataset.idx);
+          pollVotes[pollVoted] += 1;
+          renderPoll();
+        });
+      });
+    }
+  }
+
+  // ---------- Init ----------
+
+  document.getElementById("today").textContent =
+    "Today: " + new Date().toLocaleDateString("en-MY", { day: "numeric", month: "long", year: "numeric" });
+
+  renderHero("all");
+  renderAnnouncements("all");
+  renderActivities("all");
+  renderPolicyNews("all");
+  renderNewsWatch("all");
+  renderCategories();
+  renderPoll();
+
+  document.getElementById("boardList").innerHTML = board.map(m => `
+    <div class="member">
+      <strong>${m.name}</strong>
+      ${m.role}${m.org ? ` — ${m.org}` : ""}
+    </div>`).join("");
+
+  // ---------- Chatbot (rule-based, answers from dashboard data) ----------
+
+  const chatLog = document.getElementById("chatLog");
+  const chatPanel = document.getElementById("chatPanel");
+  const chatBox = document.getElementById("chatBox");
+
+  function pushMsg(text, who) {
+    const div = document.createElement("div");
+    div.className = "msg " + who;
+    div.innerHTML = text;
+    chatLog.appendChild(div);
+    chatLog.scrollTop = chatLog.scrollHeight;
+  }
+
+  function botReply(text) {
+    const typing = document.createElement("div");
+    typing.className = "msg bot typing";
+    typing.textContent = "typing…";
+    chatLog.appendChild(typing);
+    chatLog.scrollTop = chatLog.scrollHeight;
+    setTimeout(() => {
+      typing.remove();
+      pushMsg(text, "bot");
+    }, 450);
+  }
+
+  function findAnswer(q) {
+    const s = q.toLowerCase();
+
+    if (/(hi|hello|hey|good (morning|afternoon|evening))\b/.test(s) && s.length < 25) {
+      return "Hello! 👋 I'm the MSIA Assistant. Ask me about upcoming events, member categories, fees, board members, or how to register.";
+    }
+    if (/event|activity|program|upcoming|conference|webinar|semicon|connect|masterclass|precision|golf/.test(s)) {
+      const list = sortedAct.slice(0, 5).map(a => `• <strong>${a.title}</strong> — ${fmtDate(a.date)}`).join("<br>");
+      return `Here are the upcoming activities:<br>${list}<br><br>Use the Register button on any activity card to sign up.`;
+    }
+    if (/register|sign ?up|how do i join an event/.test(s)) {
+      return `Click the <strong>Register</strong> button on any activity card — it opens the MSIA sign-up form (Google Form) in a new tab.`;
+    }
+    if (/fee|price|cost|how much|subscription|rate/.test(s)) {
+      return `Current membership fees (effective 1 January 2027):<br>• <strong>Ordinary</strong> — RM 7,000 / month<br>• <strong>Charter</strong> — RM 5,000 / month<br>• <strong>Affiliate</strong> — RM 4,000 / month<br><br>Note: figures shown are illustrative demo data.`;
+    }
+    if (/ordinary/.test(s)) {
+      return `<strong>Ordinary membership</strong> — RM 7,000/month from 1 Jan 2027. Full membership for companies operating in Malaysia's semiconductor and E&E industry, with voting rights at the AGM.`;
+    }
+    if (/charter/.test(s)) {
+      return `<strong>Charter membership</strong> — RM 5,000/month from 1 Jan 2027. Founding-member tier for early supporters of the association, with voting rights.`;
+    }
+    if (/affiliate/.test(s)) {
+      return `<strong>Affiliate membership</strong> — RM 4,000/month from 1 Jan 2027. Entry tier for suppliers, service providers and ecosystem partners; non-voting but full event access.`;
+    }
+    if (/categor|member(ship)? type|tier/.test(s)) {
+      return `MSIA has three member categories:<br>• <strong>Ordinary</strong> — RM 7,000/month — companies in the semiconductor/E&E industry<br>• <strong>Charter</strong> — RM 5,000/month — founding members<br>• <strong>Affiliate</strong> — RM 4,000/month — suppliers &amp; ecosystem partners<br><br>Click any category card to see full details.`;
+    }
+    if (/board|president|who (runs|leads)|wong/.test(s)) {
+      return `MSIA is led by <strong>Dato' Seri Wong Siew Hai</strong> (President, NationGate Holdings) with 18 board members drawn from Intel, Infineon, Texas Instruments, SanDisk, Jabil and others. Scroll to the "MSIA Board Members" section for the full list.`;
+    }
+    if (/announce|update|news|latest/.test(s)) {
+      const list = sortedAnn.map(a => `• <strong>${a.title}</strong> — ${fmtDate(a.date)}`).join("<br>");
+      return `Latest announcements:<br>${list}`;
+    }
+    if (/policy|regulat|if r|ifr|us rule|advanced chip|export/.test(s)) {
+      return `The US BIS Interim Final Rule on advanced chips (effective 19 Nov 2026) affects export-linked members. See the <strong>Policy Watch</strong> section for recent news, and MSIA's media response under the Policy filter.`;
+    }
+    if (/contact|email|reach|secretariat|phone/.test(s)) {
+      return `You can reach the MSIA secretariat at <strong>secretariat@msia.org.my</strong>. The office is at the MPC Headquarters, Menara Matrade, Kuala Lumpur.`;
+    }
+    if (/thank|thanks|cheers/.test(s)) {
+      return "You're welcome! Let me know if you need anything else. 😊";
+    }
+    if (/who are you|what are you|bot|assistant/.test(s)) {
+      return "I'm the MSIA Assistant — a demo chatbot built into this dashboard. I can answer questions about events, fees, categories, board members and policy updates from the information on this page.";
+    }
+    return "I'm not sure about that one — I'm a demo assistant and only know what's on this dashboard. 🤔<br><br>Try asking about <strong>events</strong>, <strong>fees</strong>, <strong>member categories</strong>, the <strong>board</strong>, or <strong>US chip regulation</strong>.";
+  }
+
+  function sendMessage() {
+    const q = chatBox.value.trim();
+    if (!q) return;
+    pushMsg(q.replace(/</g, "&lt;"), "user");
+    chatBox.value = "";
+    botReply(findAnswer(q));
+  }
+
+  document.getElementById("chatFab").addEventListener("click", () => {
+    chatPanel.classList.add("open");
+    if (!chatLog.children.length) {
+      botReply("Hello! 👋 I'm the MSIA Assistant. Ask me about upcoming events, member categories, fees, or board members — or tap a suggestion below.");
+    }
+    chatBox.focus();
+  });
+  document.getElementById("chatClose").addEventListener("click", () => chatPanel.classList.remove("open"));
+  document.getElementById("chatSend").addEventListener("click", sendMessage);
+  chatBox.addEventListener("keydown", e => { if (e.key === "Enter") sendMessage(); });
+
+  // Quick-reply chips
+  const quickReplies = ["Upcoming events", "Membership fees", "Member categories", "Who is the president?", "US chip regulation"];
+  const quickWrap = document.getElementById("chatQuick");
+  quickReplies.forEach(q => {
+    const b = document.createElement("button");
+    b.textContent = q;
+    b.addEventListener("click", () => {
+      pushMsg(q, "user");
+      botReply(findAnswer(q));
+    });
+    quickWrap.appendChild(b);
+  });
+</script>
+</body>
+</html>
